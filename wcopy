@@ -1,0 +1,5 @@
+#/bin/bash
+
+filename=$(basename "$1")
+cp $1 ${WWW}/$filename ;
+cp $1 ${WWW}/newNow.png ;
