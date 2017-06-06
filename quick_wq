@@ -1,0 +1,17 @@
+#!/usr/bin/python
+import time
+import sys, os
+
+nowvar=str(time.time())
+pwd = os.getcwd()
+
+gen = sys.argv[1]
+command = ' '.join(sys.argv[2:])
+
+cmd = "nohup wq sub -r \"job_name:quickJob; priority:med; notgroup:[]; group:["+gen+"]\" -c \"source ~/.bashrc;source ~/.bash_profile; cd "+pwd+"; "+command+"\" >$(pwd)/output"+nowvar+".log &"
+
+
+print cmd
+os.system(cmd)
+os.system("sleep 0.5 ;")
+

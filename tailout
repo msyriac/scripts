@@ -1,2 +1,3 @@
 #! /bin/zsh -
-tail -f output*.log(.om[1])
+echo output*.log(.om[${1:-1}])
+tail -f output*.log(.om[${1:-1}])
