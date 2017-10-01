@@ -16,7 +16,7 @@ nowvar=str(int(time.time()*10))
 
 
 
-subcmd = "nohup wq sub -r \"mode:bycore;N:"+N+";hostfile: auto;job_name:mpi;priority:med;group:["+gen+"]\" -c \"source ~/.bash_profile ; source ~/.bashrc ; cd $(pwd) ; mpirun -hostfile %hostfile% "+cmd+" \" > $(pwd)/output"+nowvar+".log 2>&1  &"
+subcmd = "nohup wq sub -r \"mode:bycore;N:"+N+";hostfile: auto;job_name:mpi;priority:med;notgroup:[a39];group:["+gen+"]\" -c \"source ~/.bash_profile ; source ~/.bashrc ; cd $(pwd) ; mpirun -hostfile %hostfile% "+cmd+" \" > $(pwd)/output"+nowvar+".log 2>&1  &"
 
 
 os.system(subcmd)
