@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import os,sys,time
 import argparse
 
 parser = argparse.ArgumentParser(description='Submit strided/threaded MPI jobs to the BNL Astro Cluster')
-parser.add_argument("N", type=str,help='Number of MPI jobs')
+parser.add_argument("N", type=int,help='Number of MPI jobs')
 parser.add_argument("Command", type=str,help='Command')
 parser.add_argument("-t", "--threads",     type=int,  default=1,help="Number of threads / cores to stride")
 parser.add_argument("-i", "--include",     type=str,  default="",help="Groups to include")
@@ -15,16 +15,16 @@ parser.add_argument("-p", "--priority",     type=str,  default="med",help="Prior
 
 args = parser.parse_args()
 
-cores = args.N * args.threads
+cores = str(args.N * args.threads)
 jobname = args.name
 nowvar=str(int(time.time()*10))
 
 
 if jobname is None:
-    jobname = nowvar
+    jobname = "output"+nowvar+".log"
 
 
-subcmd = "nohup wq sub -r \"mode:bycore;N:"+cores+";threads: "+args.threads+" ;hostfile: auto;job_name:"+jobname+";priority:"+args.priority+";notgroup:["+args.exclude+"];group:["+args.include+"]\" -c \"source ~/.bash_profile ; source ~/.bashrc ; cd $(pwd) ; OMP_NUM_THREADS=%threads% mpirun -hostfile %hostfile% "+args.Command+" \" > $(pwd)/output"+nowvar+".log 2>&1  &"
+subcmd = "nohup wq sub -r \"mode:bycore;N:"+cores+";threads: "+str(args.threads)+" ;hostfile: auto;job_name:"+jobname+";priority:"+args.priority+";notgroup:["+args.exclude+"];group:["+args.include+"]\" -c \"source ~/.bash_profile ; source ~/.bashrc ; cd $(pwd) ; OMP_NUM_THREADS=%threads% mpirun -hostfile %hostfile% "+args.Command+" \" > $(pwd)/output"+nowvar+".log 2>&1  &"
 
 
 os.system(subcmd)
