@@ -1,4 +1,3 @@
-#!/gpfs01/astro/packages/anaconda/default/bin/python
 import numpy as np, argparse, healpy
 from enlib import enmap
 #import enmap
