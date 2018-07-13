@@ -11,7 +11,7 @@ parser.add_argument("-i", "--include",     type=str,  default="",help="Groups to
 parser.add_argument("-e", "--exclude",     type=str,  default="",help="Groups to exclude")
 parser.add_argument("-n", "--name",     type=str,  default=None,help="Job name")
 parser.add_argument("-p", "--priority",     type=str,  default="med",help="Priority")
-
+parser.add_argument("-s", "--show", action='store_true',help='Dont execute. Just show command.')
 
 args = parser.parse_args()
 
@@ -24,9 +24,14 @@ if jobname is None:
     jobname = "output"+nowvar+".log"
 
 
-subcmd = "nohup wq sub -r \"mode:bycore;N:"+cores+";threads: "+str(args.threads)+" ;hostfile: auto;job_name:"+jobname+";priority:"+args.priority+";notgroup:["+args.exclude+"];group:["+args.include+"]\" -c \"source ~/.bash_profile ; source ~/.bashrc ; cd $(pwd) ; OMP_NUM_THREADS=%threads% mpirun -hostfile %hostfile% "+args.Command+" \" > $(pwd)/output"+nowvar+".log 2>&1  &"
+if args.Command.strip().lower()=="bash":
+    subcmd = "wq sub -r \"mode:bycore;N:"+cores+";threads: "+str(args.threads)+" ;hostfile: auto;job_name:"+jobname+";priority:"+args.priority+";notgroup:["+args.exclude+"];group:["+args.include+"]\" -c \"bash ; cd $(pwd) ; export OMP_NUM_THREADS=%threads% \""
+else:    
+    subcmd = "nohup wq sub -r \"mode:bycore;N:"+cores+";threads: "+str(args.threads)+" ;hostfile: auto;job_name:"+jobname+";priority:"+args.priority+";notgroup:["+args.exclude+"];group:["+args.include+"]\" -c \"source ~/.bash_profile ; source ~/.bashrc ; cd $(pwd) ; OMP_NUM_THREADS=%threads% mpirun -hostfile %hostfile% "+args.Command+" \" > $(pwd)/output"+nowvar+".log 2>&1  &"
 
-
-os.system(subcmd)
-time.sleep(0.3)
+if not(args.show):
+    os.system(subcmd)
+    time.sleep(0.3)
+else:
+    print subcmd
 
