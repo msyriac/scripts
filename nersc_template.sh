@@ -1,4 +1,5 @@
 #!/bin/bash
+#SBATCH --account=!REPO
 #SBATCH --constraint=!SYSTEM
 #SBATCH --nodes=!NODES
 #SBATCH --partition=!QUEUE

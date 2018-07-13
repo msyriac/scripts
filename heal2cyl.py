@@ -9,7 +9,7 @@ parser.add_argument("-r", "--res", type=float, default=None,help="Resolution in 
 parser.add_argument("-c", "--coords", type=str, default="j2000")
 args = parser.parse_args()
 
-imap  = hp.read_map(args.ifile)
+imap  = hp.read_map(args.ifile).astype(np.float32)
 assert imap.ndim==1, "Can't convert multi-component healpix maps"
 
 if args.res is None:
@@ -24,5 +24,6 @@ shape, wcs = enmap.fullsky_geometry(res=res, shape=None, dims=(), proj="car")
 print(shape)
 
 omap = maps.enmap_from_healpix(shape,wcs,imap,hp_coords=args.coords,interpolate=True)
+del imap
 print("Done converting. Saving...")
 enmap.write_map(args.ofile, omap)
