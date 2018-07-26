@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import argparse
+parser = argparse.ArgumentParser(description='Inspect a file.')
+parser.add_argument("filename", type=str,help='Path to file.')
+parser.add_argument("-e", "--ext",     type=str,  default=None,help="Extension. Leave unspecified to infer from filename.")
+#parser.add_argument("-f", "--flag", action='store_true',help='A flag.')
+#required_args = parser.add_argument_group('Required arguments')
+#required_args.add_argument("--region",     type=str,help="Region name from input/regions.yaml",required=True)
+args = parser.parse_args()
+
+fname = args.filename
+ext = args.ext is  not None else fname.split('.')[-1]
+#allowed_exts = ['fits','npy','txt','csv','pkl','pickle']
+
+if ext=='fits':
+    pass
+elif ext in ['npy','numpy']:
+    import numpy as np
+    a = np.load(fname)
+    print("Numpy array : " , a.shape,a.dtype)
+elif ext in ['txt','csv']:
+    pass
+elif ext in ['pkl','pickle']:
+    pass
+elif ext in ['hdf','hd5','hdf5']:
+    pass
+else:
+    print("Not a supported file format.")
