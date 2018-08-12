@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import argparse
+parser = argparse.ArgumentParser(description='Inspect a file.')
+parser.add_argument("filename", type=str,help='Path to file.')
+parser.add_argument("-e", "--ext",     type=str,  default=None,help="Extension. Leave unspecified to infer from filename.")
+#parser.add_argument("-f", "--flag", action='store_true',help='A flag.')
+#required_args = parser.add_argument_group('Required arguments')
+#required_args.add_argument("--region",     type=str,help="Region name from input/regions.yaml",required=True)
+args = parser.parse_args()
+
+fname = args.filename
+ext = args.ext if args.ext is not None else fname.split('.')[-1]
+
+if ext in ['fits','fit']:
+    from astropy.io import fits
+    hdu = fits.open(fname)
+    try: print(repr(hdu[0].header))
+    except: pass
+    try: print(repr(hdu[1].header))
+    except: pass
+    print(hdu.info())
+    try: print(hdu[0].columns)
+    except: pass
+    try: print(hdu[1].columns)
+    except: pass
+    try:
+        from enlib import enmap
+        import numpy as np
+        shape,wcs = enmap.read_fits_geometry(fname)
+        print(shape,wcs)
+        area = enmap.area(shape,wcs)*(180./np.pi)**2.
+        res = np.min(np.abs(enmap.extent(shape,wcs))/shape[-2:]) * 60.*180./np.pi
+        print("%.2f sq. deg. " % area)
+        print("%.4f arcmin pixel width " % res)
+    except:
+        pass
+    hdu.close()
+    
+elif ext in ['npy','numpy']:
+    import numpy as np
+    a = np.load(fname)
+    print("Numpy array : " , a.shape,a.dtype)
+elif ext in ['txt','csv']:
+    try:
+        a = np.loadtxt(fname)
+    except:
+        a = np.loadtxt(fname,delimiter=',')
+    print(a)
+    print(a.shape)
+elif ext in ['pkl','pickle']:
+    import cPickle as pickle
+    try:
+        a = pickle.load(open(fname,'rb'))
+    except:
+        a = pickle.load(open(fname,'r'))
+    print(a)
+    print(len(a))
+elif ext in ['hdf','hd5','hdf5']:
+    raise NotImplementedError
+else:
+    print("Not a supported file format.")
