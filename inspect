@@ -11,9 +11,9 @@ parser.add_argument("-e", "--ext",     type=str,  default=None,help="Extension. 
 args = parser.parse_args()
 
 fname = args.filename
-ext = args.ext if args.ext is not None else fname.split('.')[-1]
+ext = args.ext if args.ext is not None else ".".join(fname.split('.')[1:])
 
-if ext in ['fits','fit']:
+if ext in ['fits','fit','fits.gz','fit.gz']:
     from astropy.io import fits
     hdu = fits.open(fname)
     try: print(repr(hdu[0].header))
