@@ -88,4 +88,4 @@ os.system(subcmd)
 time.sleep(0.3)
 
 
-print scriptfile, " submitted"
+print( scriptfile, " submitted")
