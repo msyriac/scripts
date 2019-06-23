@@ -11,7 +11,7 @@ parser.add_argument("-e", "--ext",     type=str,  default=None,help="Extension. 
 args = parser.parse_args()
 
 fname = args.filename
-ext = args.ext if args.ext is not None else ".".join(fname.split('.')[1:])
+ext = args.ext if args.ext is not None else ".".join(fname.split('.')[-1])
 
 if ext in ['fits','fit','fits.gz','fit.gz']:
     from astropy.io import fits
@@ -32,6 +32,7 @@ if ext in ['fits','fit','fits.gz','fit.gz']:
         print(shape,wcs)
         area = enmap.area(shape,wcs)*(180./np.pi)**2.
         res = np.min(np.abs(enmap.extent(shape,wcs))/shape[-2:]) * 60.*180./np.pi
+        print("Npix: %d " % np.prod(shape[-2:]))
         print("%.2f sq. deg. " % area)
         print("%.4f arcmin pixel width " % res)
     except:
