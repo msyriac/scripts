@@ -12,7 +12,6 @@ args = parser.parse_args()
 
 fname = args.filename
 ext = args.ext if args.ext is not None else ".".join(fname.split('.')[-1])
-
 if ext in ['fits','fit','fits.gz','fit.gz']:
     from astropy.io import fits
     hdu = fits.open(fname)
