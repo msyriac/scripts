@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+
+import os,sys,time,stat
+import math, random, string
+import argparse
+
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+parser = argparse.ArgumentParser(description='Submit strided/threaded MPI jobs to Niagara')
+parser.add_argument("N", type=int,help='Number of MPI jobs')
+parser.add_argument("Command", type=str,help='Command')
+parser.add_argument("-t", "--threads",     type=int,  default=1,help="Number of threads / cores to stride")
+parser.add_argument("-w", "--walltime",     type=str,  default="00:15:00",help="Queue name")
+
+
+args = parser.parse_args()
+
+
+    
+
+num_cores = args.N * args.threads
+nowvar=str(int(time.time()*10))
+
+cores_per_node = 80.
+
+num_nodes = int(math.ceil(num_cores/cores_per_node))
+totcores = num_nodes * cores_per_node
+tasks = int(args.N*1./num_nodes)
+percent_used = num_cores*100./float(totcores)
+if percent_used<90.:
+    ans = query_yes_no("Less than 90 % of cores will be used. Are you sure you want to submit?")
+    if not(ans): sys.exit()
+
+Nlen = 10
+randstr = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(Nlen))
+scriptname = "script_"+nowvar+"_"+randstr+".sh"
+
+
+
+with open(os.environ['HOME']+"/scripts/niagara_template.sh",'r') as f:
+    filestring = f.read()
+    filestring = filestring.replace("!WALL",args.walltime)
+    filestring = filestring.replace("!NODES",str(num_nodes))
+    filestring = filestring.replace("!NUMJOBS",str(args.N))
+    filestring = filestring.replace("!TASKS",str(tasks))
+    filestring = filestring.replace("!THREADS",str(args.threads))
+    filestring = filestring.replace("!CMD",args.Command)
+
+scriptfile = os.getcwd()+"/"+scriptname
+with open(scriptfile,'w') as f:
+    f.write(filestring)
+    
+subcmd = "sbatch "+ scriptfile
+
+
+os.system(subcmd)
+time.sleep(0.3)
+
+
+print( scriptfile, " submitted")
