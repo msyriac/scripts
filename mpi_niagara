@@ -41,6 +41,7 @@ parser.add_argument("N", type=int,help='Number of MPI jobs')
 parser.add_argument("Command", type=str,help='Command')
 parser.add_argument("-t", "--threads",     type=int,  default=1,help="Number of threads / cores to stride")
 parser.add_argument("-w", "--walltime",     type=str,  default="00:15:00",help="Queue name")
+parser.add_argument("-d", "--dep",     type=str,  default=None,help="Depend on this JOBID.")
 
 
 args = parser.parse_args()
@@ -80,7 +81,10 @@ scriptfile = os.getcwd()+"/"+scriptname
 with open(scriptfile,'w') as f:
     f.write(filestring)
     
-subcmd = "sbatch "+ scriptfile
+
+depstr = ""
+if args.dep is not None: depstr = f"--dependency=afterok:{args.dep}"
+subcmd = f"sbatch {depstr} {scriptfile} "
 
 
 os.system(subcmd)

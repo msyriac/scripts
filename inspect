@@ -34,6 +34,8 @@ if ext in ['fits','fit','fits.gz','fit.gz']:
         print("Npix: %d " % np.prod(shape[-2:]))
         print("%.2f sq. deg. " % area)
         print("%.4f arcmin pixel width " % res)
+        center = np.rad2deg(enmap.center(shape,wcs))
+        print("Centered at ra=%.3f, dec=%.3f" % (center[1],center[0]))
     except:
         pass
     hdu.close()
