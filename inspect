@@ -11,9 +11,8 @@ parser.add_argument("-e", "--ext",     type=str,  default=None,help="Extension. 
 args = parser.parse_args()
 
 fname = args.filename
-ext = args.ext if args.ext is not None else fname.split('.')[-1]
-
-if ext in ['fits','fit']:
+ext = args.ext if args.ext is not None else ".".join(fname.split('.')[-1])
+if ext in ['fits','fit','fits.gz','fit.gz']:
     from astropy.io import fits
     hdu = fits.open(fname)
     try: print(repr(hdu[0].header))
@@ -32,8 +31,11 @@ if ext in ['fits','fit']:
         print(shape,wcs)
         area = enmap.area(shape,wcs)*(180./np.pi)**2.
         res = np.min(np.abs(enmap.extent(shape,wcs))/shape[-2:]) * 60.*180./np.pi
+        print("Npix: %d " % np.prod(shape[-2:]))
         print("%.2f sq. deg. " % area)
         print("%.4f arcmin pixel width " % res)
+        center = np.rad2deg(enmap.center(shape,wcs))
+        print("Centered at ra=%.3f, dec=%.3f" % (center[1],center[0]))
     except:
         pass
     hdu.close()

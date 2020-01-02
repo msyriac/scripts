@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import argparse
+import os,sys
+parser = argparse.ArgumentParser(description='Inspect a file.')
+parser.add_argument("filename", type=str,help='Path to file.')
+parser.add_argument("-d", "--downgrade",     type=int,  default=None,help="Downgrade factor.")
+parser.add_argument("-g", action='store_true',help='A flag.')
+parser.add_argument("--grid", action='store_true',help='A flag.')
+#required_args = parser.add_argument_group('Required arguments')
+#required_args.add_argument("--region",     type=str,help="Region name from input/regions.yaml",required=True)
+args = parser.parse_args()
+
+from pixell import enmap
+from orphics import io
+
+fname = args.filename
+a = enmap.read_map(fname)
+dfunc = (lambda x: x) if (args.downgrade is None) else lambda x: enmap.downgrade(x,args.downgrade)
+cmap = 'gray' if args.g else 'planck'
+print(a.shape)
+print(dfunc)
+dmap = dfunc(a)
+print(dmap)
+print(dmap.shape)
+io.hplot(dmap,os.path.basename(fname)+"_enplot",color=cmap,grid=args.grid)
