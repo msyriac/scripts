@@ -1,0 +1,2 @@
+#!/bin/bash
+python -c "import $1 as p; print('Version: ', p.__version__); print('Location: ',p.__file__)"

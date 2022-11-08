@@ -50,9 +50,6 @@ parser.add_argument("-S", "--system",     type=str,  default="haswell",help="has
 
 args = parser.parse_args()
 
-
-    
-
 num_cores = args.N * args.threads
 jobname = args.name
 nowvar=str(int(time.time()*10))
