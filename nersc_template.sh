@@ -12,4 +12,6 @@ export OMP_PLACES=threads
 export OMP_NUM_THREADS=!THREADS
 export DISABLE_MPI=false
 
+module load python/3.7-anaconda-2019.07
+
 srun -n !NUMJOBS -c !THREADS !CMD

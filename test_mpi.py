@@ -19,7 +19,7 @@ s = stats.Stats(comm)
 for task in my_tasks:
 
     s.add_to_stats("count",(1,))
-    if task==2: raise AttributeError
+    #if task==2: raise AttributeError
     
     if rank==0: print ("Rank 0 done with task ", task+1, " / " , len(my_tasks))
 
