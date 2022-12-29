@@ -51,8 +51,6 @@ parser.add_argument("-R", "--repo",     type=str,  default="mp107",help="Repo na
 
 args = parser.parse_args()
 
-
-    
 repo_name = args.repo
 num_cores = args.N * args.threads
 jobname = args.name
