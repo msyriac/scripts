@@ -40,14 +40,13 @@ parser = argparse.ArgumentParser(description='Submit strided/threaded MPI jobs t
 parser.add_argument("N", type=int,help='Number of MPI jobs')
 parser.add_argument("Command", type=str,help='Command')
 parser.add_argument("-t", "--threads",     type=int,  default=1,help="Number of threads / cores to stride")
-parser.add_argument("-w", "--walltime",     type=str,  default="00:15:00",help="Queue name")
+parser.add_argument("-w", "--walltime",     type=str,  default="00:15:00",help="Walltime")
 parser.add_argument("-d", "--dep",     type=str,  default=None,help="Depend on this JOBID.")
 
 
 args = parser.parse_args()
 
 num_cores = args.N * args.threads
-jobname = args.name
 nowvar=str(int(time.time()*10))
 
 cores_per_node = 80.
