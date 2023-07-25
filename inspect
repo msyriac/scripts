@@ -25,7 +25,7 @@ if ext in ['fits','fit','fits.gz','fit.gz']:
     try: print(hdu[1].columns)
     except: pass
     try:
-        from enlib import enmap
+        from pixell import enmap
         import numpy as np
         shape,wcs = enmap.read_fits_geometry(fname)
         print(shape,wcs)
