@@ -10,13 +10,14 @@ cd $SLURM_SUBMIT_DIR
 
 export DISABLE_MPI=false
 
+module load NiaEnv/2019b
+module load intel/2019u4 
+export I_MPI_JOB_RESPECT_PROCESS_PLACEMENT=disable
+module load intelmpi/2019u4
+module load python/3.8.5
 module load autotools
-module load intel
-module load intelmpi
-module load intelpython3
-module load hdf5-mpi/1.10.2 
-module load cfitsio/3.430 
-
+module load cfitsio
+module load gsl
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
