@@ -27,7 +27,7 @@ def query_yes_no(question, default="yes"):
 
     while True:
         sys.stdout.write(question + prompt)
-        choice = raw_input().lower()
+        choice = input().lower()
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
@@ -46,13 +46,12 @@ parser.add_argument("-n", "--name",     type=str,  default=None,help="Job name")
 parser.add_argument("-q", "--queue",     type=str,  default="debug",help="Queue name")
 parser.add_argument("-w", "--walltime",     type=str,  default="00:10:00",help="Queue name")
 parser.add_argument("-S", "--system",     type=str,  default="haswell",help="haswell/knl")
+parser.add_argument("-R", "--repo",     type=str,  default="mp107",help="Repo name")
 
 
 args = parser.parse_args()
 
-
-    
-
+repo_name = args.repo
 num_cores = args.N * args.threads
 jobname = args.name
 nowvar=str(int(time.time()*10))
@@ -87,6 +86,7 @@ with open(os.environ['HOME']+"/scripts/nersc_template.sh",'r') as f:
     filestring = filestring.replace("!THREADS",str(args.threads))
     filestring = filestring.replace("!CMD",args.Command)
     filestring = filestring.replace("!JOBNAME",jobname)
+    filestring = filestring.replace("!REPO",repo_name)
 
 scriptfile = os.getcwd()+"/"+scriptname
 with open(scriptfile,'w') as f:
@@ -100,4 +100,4 @@ os.system(subcmd)
 time.sleep(0.3)
 
 
-print scriptfile, " submitted"
+print (scriptfile, " submitted")

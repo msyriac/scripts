@@ -45,10 +45,8 @@ parser.add_argument("-w", "--walltime",     type=str,  default="00:10:00",help="
 
 args = parser.parse_args()
 
-
-    
-
 num_cores = args.N * args.threads
+jobname = args.name
 nowvar=str(int(time.time()*10))
 
 cores_per_node = 40.

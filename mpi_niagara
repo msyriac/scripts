@@ -46,10 +46,8 @@ parser.add_argument("-d", "--dep",     type=str,  default=None,help="Depend on t
 
 args = parser.parse_args()
 
-
-    
-
 num_cores = args.N * args.threads
+jobname = args.name
 nowvar=str(int(time.time()*10))
 
 cores_per_node = 80.

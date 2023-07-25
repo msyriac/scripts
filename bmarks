@@ -1,0 +1,2 @@
+#!/bin/bash
+cd $HOME/Dropbox/msyriac.github.io/bookmarks && nohup python -m http.server &
