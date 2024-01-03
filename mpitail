@@ -1,0 +1,2 @@
+#!/bin/bash
+tail -f $WORK/mpi_output_$1.txt
